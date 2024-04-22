@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Colored Text</title>
+</head>
+
+<body>
+	<h2 th:style="'color : '+${textColor}"><span th:text="${text}" ></span>
+	</h2>
+</body>
+
+</html>
