@@ -2,6 +2,7 @@ package com.learining.springboot.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +54,21 @@ public class HomeController {
 //		return "home.html";		// can't return a string or html page like previously done
 	}
 	
+//	works for http://localhost:8080/template1/abc/xyz
+	@RequestMapping("/template1/{val1}/{val2}")
+	public String template1(@PathVariable String val1, @PathVariable String val2, Model model) {
+		System.out.println("template1: " + val1 + " " + val2);
+		model.addAttribute("val1", val1);
+		model.addAttribute("val2", val2);
+		return "template1";
+	}
 	
+//	works for http://localhost:8080/template2/blue/blue
+	@RequestMapping("/template2/{text}/{color}")
+	public String template2(@PathVariable String text, @PathVariable String color, Model model) {
+		model.addAttribute("text", text);
+		model.addAttribute("textColor", color);
+		return "colorTemplate";
+	}
 
 }
