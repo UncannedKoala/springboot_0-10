@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HomeController {
 
 //	works for http://localhost:8080/
-	@RequestMapping
-	public String home() {
+	@RequestMapping("/home1")
+	public String home1() {
 		return "home.html";
 	}
 
 //	works for http://localhost:8080/home
-	@RequestMapping("/home")
+	@RequestMapping("/home2")
 	public String home2() {
 		return "home2.html";
 	}
