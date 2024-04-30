@@ -2,11 +2,11 @@ package com.learining.springboot.processors;
 
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import com.learining.springboot.service.LoggedUserManagementService;
+import com.learining.springboot.service.LoginCountService;
 
 /***
  * for each request the setters are called and the values from the request are
@@ -17,16 +17,17 @@ import com.learining.springboot.service.LoggedUserManagementService;
 public class LoginProcessor {
 
 	private final LoggedUserManagementService loggedUserManagementService;
-
+	private final LoginCountService loginCountService;
+	
 	private String user;
-
 	private String password;
 
-	@Autowired(required = true)
-	public LoginProcessor(LoggedUserManagementService loggedUserManagementService) {
+	public LoginProcessor(
+			LoggedUserManagementService loggedUserManagementService, 
+			LoginCountService loginCountService) {
 		super();
 		this.loggedUserManagementService = loggedUserManagementService;
-		System.err.println(loggedUserManagementService == null);
+		this.loginCountService = loginCountService;
 	}
 
 	public String getUser() {
@@ -74,6 +75,7 @@ public class LoginProcessor {
 	}
 
 	public boolean login() {
+		loginCountService.increment();
 		String userName = this.getUser();
 		String password = this.getPassword();
 
