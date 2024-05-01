@@ -1,42 +1,77 @@
 package com.learining.springboot.controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.learining.springboot.service.LoggedUserManagementService;
-import com.learining.springboot.service.LoginCountService;
+import com.learining.springboot.model.Person;
 
-@Controller
+@RestController
 public class MainController {
-	
-	private LoggedUserManagementService loggedUserManagementService;
-	private LoginCountService loginCountService;
 
-	public MainController(LoggedUserManagementService loggedUserManagementService) {
-		super();
-		this.loggedUserManagementService = loggedUserManagementService;
+//	http://localhost:8080/wish
+	@GetMapping("/wish")
+	public String wish() {
+		return "hello";
 	}
 
-	@GetMapping("/main")
-	public String home(
-			@RequestParam(required = false) String logout, 
-			Model model
-			) {
-		
-		if (logout != null)
-			loggedUserManagementService.setUserName(null);
-		
-		String userName = this.loggedUserManagementService.getUserName();
-		long counter = loginCountService.getCounter();
-		
-		if (userName == null)
-			return "redirect:/";
-		
-		model.addAttribute("userName", userName);
-		model.addAttribute("loginCount", counter);
-		
-		return "main.html";
+//	http://localhost:8080/greet?name=%20Piyush
+	@GetMapping("/greet")
+	public String greet(@RequestParam String name) {
+		return "hey" + name;
 	}
+
+//	http://localhost:8080/person
+	@GetMapping("/person")
+	public Person person() {
+		return new Person("Sample Person", 12);
+	}
+
+	/**
+	 * API to return An instance in a response body
+	 * 
+	 * @param name name value of Person instance
+	 * @param age  age value of the Person instance
+	 * @return
+	 *         <li>Person instance with valid passed values
+	 *         <li>default Person instance if any of the values is invalid, example
+	 *         for http://localhost:8080/person/%20/10
+	 */
+	@GetMapping("/person/{name}/{age}")
+	public Optional<Person> personOf(@PathVariable String name, @PathVariable int age) {
+		Optional<Person> person = Optional.of(new Person("default name", 0));
+		if (name.isBlank() || age < 0)
+			return person;
+		return Optional.of(new Person(name, age));
+	}
+
+	/**
+	 * other version of above API
+	 * 
+	 * @param name name value of Person instance
+	 * @param age  age value of the Person instance
+	 * @return A Person instance with valid values, else a default Person instance
+	 */
+	@GetMapping("/person2/{name}/{age}")
+	public Person personOf2(@PathVariable String name, @PathVariable int age) {
+		Optional<Person> person = Optional.empty();
+		if (name.isBlank() || age < 0)
+			person = Optional.of(new Person("default name", 0));
+		return person.orElse(new Person(name, age));
+	}
+
+	/**
+	 * Person[], List<Person>, Set<Person>, Collection<Person> would result the same
+	 * @return An array of Persons 
+	 */
+	@GetMapping("/persons")
+	public Person[] persons() {
+		return Stream.of(new Person("Person1", 11), new Person("Person2", 27)).toArray(length -> new Person[length]);
+//		return List.of(new Person("Person1", 11), new Person("Person2", 27));
+	}
+
 }
