@@ -3,18 +3,23 @@ package com.learining.springboot.controller;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.learining.springboot.model.Cat;
 import com.learining.springboot.model.Person;
 
 @RestController
 public class MainController {
+
+	@Autowired
+	private ApplicationContext ctxt;
 
 //	http://localhost:8080/wish
 	@GetMapping("/wish")
@@ -29,9 +34,11 @@ public class MainController {
 	}
 
 //	http://localhost:8080/person
+	@Autowired
 	@GetMapping("/person")
-	public Person person() {
-		return new Person("Sample Person", 12);
+	public Person person(Person properPerson, Cat p1) {
+		System.out.println(ctxt.getBean("Person"));
+		return ctxt.getBean(Person.class);
 	}
 
 	/**
@@ -79,8 +86,10 @@ public class MainController {
 	}
 
 	/**
-	 * <li>Demonstrating control over the 'http response' using 'ResponseEntity'</li>
-	 * <li>Custom Headers that are returned are visible under the 'chrome dev tools' headers in 'raw' options</li> 
+	 * <li>Demonstrating control over the 'http response' using
+	 * 'ResponseEntity'</li>
+	 * <li>Custom Headers that are returned are visible under the 'chrome dev tools'
+	 * headers in 'raw' options</li>
 	 */
 	@GetMapping("/chad")
 	public ResponseEntity<Person> chad() {
