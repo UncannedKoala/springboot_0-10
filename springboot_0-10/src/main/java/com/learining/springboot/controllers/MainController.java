@@ -3,6 +3,9 @@ package com.learining.springboot.controllers;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,12 +69,24 @@ public class MainController {
 
 	/**
 	 * Person[], List<Person>, Set<Person>, Collection<Person> would result the same
-	 * @return An array of Persons 
+	 * 
+	 * @return An array of Persons
 	 */
 	@GetMapping("/persons")
 	public Person[] persons() {
 		return Stream.of(new Person("Person1", 11), new Person("Person2", 27)).toArray(length -> new Person[length]);
 //		return List.of(new Person("Person1", 11), new Person("Person2", 27));
+	}
+
+	/**
+	 * <li>Demonstrating control over the 'http response' using 'ResponseEntity'</li>
+	 * <li>Custom Headers that are returned are visible under the 'chrome dev tools' headers in 'raw' options</li> 
+	 */
+	@GetMapping("/chad")
+	public ResponseEntity<Person> chad() {
+		Person chad = new Person("Chad", 31);
+		return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).header("skin color complexion", "fair")
+				.header("eye color", "hazel").body(chad);
 	}
 
 }
