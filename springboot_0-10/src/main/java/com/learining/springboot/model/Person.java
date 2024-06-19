@@ -2,6 +2,9 @@ package com.learining.springboot.model;
 
 import java.util.Objects;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Person {
 	
 	private String name;

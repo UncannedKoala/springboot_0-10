@@ -1,4 +1,4 @@
-package com.learining.springboot.controllers;
+package com.learining.springboot.controller;
 
 import java.util.Optional;
 import java.util.stream.Stream;
