@@ -5,23 +5,23 @@ import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 //@Component
-public class Person {
+public class PersonRegisterDTO {
 
 	private String name;
 	private int age;
 	private Cat pet;
 
-	public Person() {
+	public PersonRegisterDTO() {
 		super();
 	}
 
-	public Person(String name, int age) {
+	public PersonRegisterDTO(String name, int age) {
 		super();
 		this.name = name;
 		this.age = age;
 	}
 
-	public Person(String name, int age, Cat pet) {
+	public PersonRegisterDTO(String name, int age, Cat pet) {
 		super();
 		this.name = name;
 		this.age = age;
@@ -65,7 +65,7 @@ public class Person {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Person other = (Person) obj;
+		PersonRegisterDTO other = (PersonRegisterDTO) obj;
 		return age == other.age && Objects.equals(name, other.name) && Objects.equals(pet, other.pet);
 	}
 
