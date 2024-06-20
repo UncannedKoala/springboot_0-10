@@ -4,22 +4,28 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learining.springboot.model.Cat;
 import com.learining.springboot.model.Person;
+import com.learining.springboot.model.PersonRegisterDTO;
 
 @RestController
 public class MainController {
 
+//	@Autowired
+//	private ApplicationContext ctxt;
+//	
 	@Autowired
-	private ApplicationContext ctxt;
+	private GenericApplicationContext ctxt;
 
 //	http://localhost:8080/wish
 	@GetMapping("/wish")
@@ -37,7 +43,6 @@ public class MainController {
 	@Autowired
 	@GetMapping("/person")
 	public Person person(Person properPerson, Cat p1) {
-		System.out.println(ctxt.getBean("Person"));
 		return ctxt.getBean(Person.class);
 	}
 
@@ -96,6 +101,23 @@ public class MainController {
 		Person chad = new Person("Chad", 31);
 		return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).header("skin color complexion", "fair")
 				.header("eye color", "hazel").body(chad);
+	}
+
+//	http://localhost:8080/putInCtxt
+	/**
+	 * Apparently (as per current understandings)if the Bean of the Type registering
+	 * here is already present in the Context, Spring will not allow us to register
+	 * another object of the same Type
+	 * 
+	 * @param PersonRegisterDTO to register into the Context
+	 * @return PersonRegisterDTO that was registered into the context
+	 */
+	@PostMapping("/putInCtxt")
+	public PersonRegisterDTO putInCtxt(@RequestBody PersonRegisterDTO person) {
+		System.out.println(person);
+		ctxt.registerBean("putInCtxt bean", PersonRegisterDTO.class, () -> person,
+				beanDef -> beanDef.setPrimary(false));
+		return ctxt.getBean("putInCtxt bean", PersonRegisterDTO.class);
 	}
 
 }
