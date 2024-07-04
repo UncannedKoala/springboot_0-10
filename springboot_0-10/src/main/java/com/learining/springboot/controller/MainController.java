@@ -1,5 +1,6 @@
 package com.learining.springboot.controller;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.learining.springboot.model.Cat;
 import com.learining.springboot.model.Person;
+import com.learining.springboot.model.PersonNotFoundDTO;
 import com.learining.springboot.model.PersonRegisterDTO;
+import com.learining.springboot.service.PersonService;
 
 @RestController
 public class MainController {
@@ -24,8 +27,14 @@ public class MainController {
 //	@Autowired
 //	private ApplicationContext ctxt;
 //	
-	@Autowired
 	private GenericApplicationContext ctxt;
+	private PersonService personService;
+
+	@Autowired
+	public MainController(GenericApplicationContext ctxt, PersonService personService) {
+		this.ctxt = ctxt;
+		this.personService = personService;
+	}
 
 //	http://localhost:8080/wish
 	@GetMapping("/wish")
@@ -118,6 +127,19 @@ public class MainController {
 		ctxt.registerBean("putInCtxt bean", PersonRegisterDTO.class, () -> person,
 				beanDef -> beanDef.setPrimary(false));
 		return ctxt.getBean("putInCtxt bean", PersonRegisterDTO.class);
+	}
+
+	@GetMapping("/get/person/{name}")
+	public ResponseEntity<?> gigaChad(@PathVariable String name) {
+		// Logic
+		Person p = null;
+		try {
+			p = personService.getPersonFromContext(name);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).header("error", "not found").body(
+					new PersonNotFoundDTO("Bean of type Person.class named '" + name + "' not found in the context"));
+		}
+		return ResponseEntity.status(HttpStatus.FOUND).header("person name", p.getName()).body(p);
 	}
 
 }
