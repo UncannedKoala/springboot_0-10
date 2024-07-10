@@ -1,6 +1,5 @@
 package com.learining.springboot.controller;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -8,13 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.learining.springboot.exception.PersonNotFoundException;
 import com.learining.springboot.model.Cat;
 import com.learining.springboot.model.Person;
 import com.learining.springboot.model.PersonNotFoundDTO;
@@ -129,6 +131,9 @@ public class MainController {
 		return ctxt.getBean("putInCtxt bean", PersonRegisterDTO.class);
 	}
 
+	/**
+	 * handling the exception explicitly and returning a ResponseEntity<?>
+	 */
 	@GetMapping("/get/person/{name}")
 	public ResponseEntity<?> gigaChad(@PathVariable String name) {
 		// Logic
@@ -140,6 +145,16 @@ public class MainController {
 					new PersonNotFoundDTO("Bean of type Person.class named '" + name + "' not found in the context"));
 		}
 		return ResponseEntity.status(HttpStatus.FOUND).header("person name", p.getName()).body(p);
+	}
+
+	/**
+	 * Using the @RestControllerAdvice and @ExceptionHandler(Exception.class) to Handle any thrown Exceptions
+	 */
+	@GetMapping("/get/PERSON/{name}")
+	public ResponseEntity<?> getPersonElseExceptionHandlerAspect(@PathVariable String name)
+			throws PersonNotFoundException {
+		Person person = this.personService.getPersonFromContext(name);
+		return ResponseEntity.ok(person);
 	}
 
 }

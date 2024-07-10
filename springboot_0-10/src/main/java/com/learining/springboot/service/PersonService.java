@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.learining.springboot.exceptions.PersonNotFoundException;
+import com.learining.springboot.exception.PersonNotFoundException;
 import com.learining.springboot.model.Person;
 
 @Service
@@ -19,7 +19,7 @@ public class PersonService {
 		this.ctxt = ctxt;
 	}
 
-	public Person getPersonFromContext(String name) {
+	public Person getPersonFromContext(String name) throws PersonNotFoundException {
 		Map<String, Person> map = ctxt.getBeansOfType(Person.class);
 		System.out.println(map);
 		Person p = new Person();
