@@ -1,5 +1,6 @@
 package com.learining.springboot.configuration;
 
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -8,6 +9,7 @@ import com.learining.springboot.model.Cat;
 import com.learining.springboot.model.Person;
 
 @Configuration
+@EnableFeignClients(basePackages = "com.learining.springboot.proxy")
 public class BaseConfig {
 
 	@Bean

@@ -10,7 +10,7 @@ import com.learining.springboot.exception.ErrorDetails;
 import com.learining.springboot.exception.NotFound;
 import com.learining.springboot.exception.PersonNotFoundException;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ExceptionControllerAdvice {
 	
 	@ExceptionHandler(Exception.class)
